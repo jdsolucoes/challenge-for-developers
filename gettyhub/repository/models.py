@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models
+from django.db import models, IntegrityError
 from django.contrib.postgres.fields import ArrayField
+
+from libs.github import SearchRepository
 
 
 class Repository(models.Model):
@@ -19,3 +21,23 @@ class Repository(models.Model):
 
     def __unicode__(self):
         return "Repo: {}".format(self.url)
+
+    @classmethod
+    def import_repositories(cls, username):
+        """Import all starred repos from an user"""
+        client = SearchRepository(username)
+        starred_repos = client.get_starred()
+
+        for repo in starred_repos:
+            obj = cls(
+                name=repo['name'],
+                repository_id=repo['id'],
+                url=repo['url']
+            )
+            try:
+                obj.save()
+            except IntegrityError:
+                print "Error importing repository {name} {id}".format(**repo)
+
+
+
