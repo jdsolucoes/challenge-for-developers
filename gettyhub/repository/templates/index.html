@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Gettyhub!</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://blackrockdigital.github.io/startbootstrap-freelancer/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="https://blackrockdigital.github.io/startbootstrap-freelancer/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template -->
+    <link href="https://blackrockdigital.github.io/startbootstrap-freelancer/css/freelancer.min.css" rel="stylesheet">
+
+  </head>
+
+  <body id="page-top">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">GettyHUB!</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          Menu
+          <i class="fa fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="masthead">
+      <div class="container">
+        <img class="img-fluid" src="img/profile.png" alt="">
+        <div class="intro-text">
+          <span class="name">You'r starred repos</span>
+          <hr class="star-light">
+          <span class="skills">organized in one place!</span>
+          <span class="skills input-group">
+            <input type="text" class="form-control" id="tag-search">
+            <span class="input-group-addon">
+              <button class="btn btn-primary" type="button" id="search-btn">
+                <i class="fa fa-search"></i>
+              </button>
+            </span>
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Portfolio Grid Section -->
+    <section id="portfolio">
+      <div class="container">
+        <h2 class="text-center">Repositories</h2>
+        <hr class="star-primary">
+
+       <div class="row" id='repos-body'>
+
+
+       </div>
+
+      </div>
+    </section>
+
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://blackrockdigital.github.io/startbootstrap-freelancer/vendor/jquery/jquery.min.js"></script>
+    <script src="https://blackrockdigital.github.io/startbootstrap-freelancer/vendor/popper/popper.min.js"></script>
+    <script src="https://blackrockdigital.github.io/startbootstrap-freelancer/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="https://blackrockdigital.github.io/startbootstrap-freelancer/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="https://blackrockdigital.github.io/startbootstrap-freelancer/js/jqBootstrapValidation.js"></script>
+    <script src="https://blackrockdigital.github.io/startbootstrap-freelancer/js/contact_me.js"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+    <script src="https://blackrockdigital.github.io/startbootstrap-freelancer/js/freelancer.min.js"></script>
+
+    {% verbatim %}
+    <script id="template" type="x-tmpl-mustache">
+    <div class="col-md-4">
+      <div class="card" id="repo-{{repository_id}}">
+          <div class="card-body">
+            <h4 class="card-title">{{name}}</h4>
+            <p class="card-text">
+            <a href="{{url}}">Visit repo</a>
+            <div class="input-group-addon">
+              <label>Tags:</label>
+              <input type="text" class="form-control" value="{{tags}}" />
+              <button class="btn btn-success" type="button" id="search-btn">
+                <i class="fa fa-check"></i>
+              </button>
+
+            </div>
+            </p>
+          </div>
+      </div>
+    </div>
+    </script>
+    {% endverbatim %}
+
+    <script type="text/javascript">
+      var repo_url = "{% url "repository" %}";
+
+      function query_repos() {
+        var tag = $('#tag-search').val();
+        console.log(tag);
+        $.getJSON(repo_url, {'tag': tag}, function(data) {
+          var template = $('#template').html();
+          var repo_body = $('#repos-body');
+          // empty
+          repo_body.empty();
+
+          $.each(data, function(k, repo) {
+            var new_repo = Mustache.render(template, repo)
+            repo_body.append(new_repo)
+          })
+        })
+      }
+
+      $(document).ready(function() {
+        $('#search-btn').on('click', query_repos).click();
+      });
+    </script>
+
+  </body>
+
+</html>
