@@ -26,6 +26,10 @@ class Repository(models.Model):
         ordering = ('repository_id',)
 
     @classmethod
+    def clear_repositories(cls):
+        cls.objects.all().delete()
+
+    @classmethod
     def import_repositories(cls, username):
         """Import all starred repos from an user"""
         client = SearchRepository(username)

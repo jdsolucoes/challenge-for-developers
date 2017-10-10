@@ -25,7 +25,7 @@ SECRET_KEY = '$*5a8^gu=e%yg!b!om)m_5iq@@al22%7#*ymc3!!bypl@y@a89'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['macmini']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
