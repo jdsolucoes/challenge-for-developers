@@ -16,7 +16,7 @@ class Repository(models.Model):
     language = models.CharField(max_length=32)
     tags = ArrayField(
         models.CharField(max_length=32),
-        null=True, blank=True
+        null=True, blank=True, unique=True
     )
 
     def __unicode__(self):
@@ -38,6 +38,16 @@ class Repository(models.Model):
                 obj.save()
             except IntegrityError:
                 print "Error importing repository {name} {id}".format(**repo)
+
+    def info(self):
+        """Return some basic info of this repository"""
+        return {
+            'id': self.repository_id,
+            'name': self.name,
+            'language': self.language,
+            'tags': list(self.tags),
+            'url': self.url,
+        }
 
 
 
