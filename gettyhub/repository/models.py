@@ -22,6 +22,9 @@ class Repository(models.Model):
     def __unicode__(self):
         return "Repo: {}".format(self.url)
 
+    class Meta:
+        ordering = ('repository_id',)
+
     @classmethod
     def import_repositories(cls, username):
         """Import all starred repos from an user"""

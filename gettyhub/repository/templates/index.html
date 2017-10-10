@@ -91,7 +91,7 @@
     {% verbatim %}
     <script id="template" type="x-tmpl-mustache">
     <div class="col-md-4">
-      <div class="card" id="repo-{{repository_id}}">
+      <div class="card" id="repo-{{repository_id}}" data-repo="{{repository_id}}"">
           <div class="card-body">
             <h4 class="card-title">{{name}}</h4>
             <p class="card-text">
@@ -99,7 +99,7 @@
             <div class="input-group-addon">
               <label>Tags:</label>
               <input type="text" class="form-control" value="{{tags}}" />
-              <button class="btn btn-success" type="button" id="search-btn">
+              <button class="btn btn-success save-tags" type="button" >
                 <i class="fa fa-check"></i>
               </button>
 
@@ -113,6 +113,15 @@
 
     <script type="text/javascript">
       var repo_url = "{% url "repository" %}";
+
+      function save_repo(repo_id, tags) {
+        var data = {
+          'tags': tags
+        }
+        $.post(repo_url + '/' + repo_id, tags, function(data) {
+          console.log(data);
+        })
+      }
 
       function query_repos() {
         var tag = $('#tag-search').val();
@@ -132,6 +141,21 @@
 
       $(document).ready(function() {
         $('#search-btn').on('click', query_repos).click();
+        $('#repos-body').on('click', '.save-tags', function(event) {
+          var card = $(this).parents('.card');
+          var repo_id = card.data('repo');
+          var tags = card.find('input').val();
+          $.ajax(
+            {
+              url: repo_url + '/' + repo_id,
+              data: {'tags': tags},
+              type: 'PATCH'
+
+            }
+          ).done(function(data) {
+            alert('Updated!')
+          })
+        })
       });
     </script>
 
